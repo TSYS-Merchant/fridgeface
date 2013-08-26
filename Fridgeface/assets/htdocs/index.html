@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Fridgeface!</title>
+
+<script src="js/util.js" type="text/javascript"></script>
+<script src="js/Ajax.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+    <form action="/poke.json" method="post" autocomplete="off" onsubmit="return Ajax.submit(this, null, function(resp){alert(resp.message);}, function(){alert('There was a problem connecting to the server.')});" style="float:left; margin-right:10px;">
+        <input type="hidden" name="verb" value="mood" />
+        <input type="hidden" name="mood" value="-1" />
+        <input type="image" src="/images/mood_-1.png" style="width:60px;" />
+    </form>
+    <form action="/poke.json" method="post" autocomplete="off" onsubmit="return Ajax.submit(this, null, function(resp){alert(resp.message);}, function(){alert('There was a problem connecting to the server.')});" style="float:left; margin-right:10px;">
+        <input type="hidden" name="verb" value="mood" />
+        <input type="hidden" name="mood" value="-.5" />
+        <input type="image" src="/images/mood_-.5.png" style="width:60px;" />
+    </form>
+    <form action="/poke.json" method="post" autocomplete="off" onsubmit="return Ajax.submit(this, null, function(resp){alert(resp.message);}, function(){alert('There was a problem connecting to the server.')});" style="float:left; margin-right:10px;">
+        <input type="hidden" name="verb" value="mood" />
+        <input type="hidden" name="mood" value="0" />
+        <input type="image" src="/images/mood_0.png" style="width:60px;" />
+    </form>
+    <form action="/poke.json" method="post" autocomplete="off" onsubmit="return Ajax.submit(this, null, function(resp){alert(resp.message);}, function(){alert('There was a problem connecting to the server.')});" style="float:left; margin-right:10px;">
+        <input type="hidden" name="verb" value="mood" />
+        <input type="hidden" name="mood" value=".5" />
+        <input type="image" src="/images/mood_.5.png" style="width:60px;" />
+    </form>
+    <form action="/poke.json" method="post" autocomplete="off" onsubmit="return Ajax.submit(this, null, function(resp){alert(resp.message);}, function(){alert('There was a problem connecting to the server.')});" style="float:left; margin-right:10px;">
+        <input type="hidden" name="verb" value="mood" />
+        <input type="hidden" name="mood" value="1" />
+        <input type="image" src="/images/mood_1.png" style="width:60px;" />
+    </form>
+
+    <div style="clear:both;" />
+
+    <!--form action="/poke.json" method="post" autocomplete="off" onsubmit="return Ajax.submit(this, function(resp){document.getElementById('phrase').value='';}, function(resp){alert(resp.message);}, function(){alert('There was a problem connecting to the server.')});">
+        <input type="hidden" name="verb" value="speak" />
+        <label>Phrase: <input type="text" name="phrase" id="phrase" /></label>
+        <input type="submit" value="Make Me Talk" />
+    </form-->
+</body>
+</html>
