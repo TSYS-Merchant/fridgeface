@@ -19,10 +19,11 @@ public class FaceView extends View {
     private Runnable mMoodRunnable;
 
     private float mMood = 0f;
+    private boolean mMouthOpen = false;
     private boolean mBlink = false;
 
-    private Paint mPaintFilled;
-    private Paint mPaintStroke;
+    private Paint mPaintEyes;
+    private Paint mPaintMouth;
     private RectF mOval;
 
     public FaceView(Context context) {
@@ -46,19 +47,22 @@ public class FaceView extends View {
             @Override
             public void run() {
                 blink();
+                setMouthOpen(!mMouthOpen);
                 mHandler.postDelayed(this, new Random().nextInt(2000) + 5000);
             }
         }, 5000);
 
-        mPaintFilled = new Paint();
-        mPaintFilled.setColor(Color.BLACK);
-        mPaintFilled.setStyle(Style.FILL);
+        mPaintEyes = new Paint();
+        mPaintEyes.setColor(Color.BLACK);
+        mPaintEyes.setStyle(Style.FILL_AND_STROKE);
+        mPaintEyes.setStrokeWidth(30);
+        mPaintEyes.setStrokeCap(Paint.Cap.ROUND);
 
-        mPaintStroke = new Paint();
-        mPaintStroke.setColor(Color.BLACK);
-        mPaintStroke.setStyle(Style.STROKE);
-        mPaintStroke.setStrokeWidth(30);
-        mPaintStroke.setStrokeCap(Paint.Cap.ROUND);
+        mPaintMouth = new Paint();
+        mPaintMouth.setColor(Color.BLACK);
+        mPaintMouth.setStyle(Style.STROKE);
+        mPaintMouth.setStrokeWidth(30);
+        mPaintMouth.setStrokeCap(Paint.Cap.ROUND);
         mOval = new RectF();
     }
 
@@ -71,20 +75,13 @@ public class FaceView extends View {
         int smallestDim = Math.min(w, h);
 
         if (!mBlink) {
-            canvas.drawCircle(w / 4, h / 4, smallestDim / 6, mPaintFilled);
-            canvas.drawCircle(w / 4 * 3, h / 4, smallestDim / 6, mPaintFilled);
+            canvas.drawCircle(w / 4, h / 4, smallestDim / 6, mPaintEyes);
+            canvas.drawCircle(w / 4 * 3, h / 4, smallestDim / 6, mPaintEyes);
         } else {
             canvas.drawLine(w / 4 - smallestDim / 6, h / 4, w / 4 + smallestDim / 6, h / 4,
-                    mPaintStroke);
+                    mPaintEyes);
             canvas.drawLine(w / 4 * 3 - smallestDim / 6, h / 4, w / 4 * 3 + smallestDim / 6, h / 4,
-                    mPaintStroke);
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mBlink = false;
-                    invalidate();
-                }
-            }, 100);
+                    mPaintEyes);
         }
 
         float mouthHeight = h / 5;
@@ -97,13 +94,18 @@ public class FaceView extends View {
             mouthTop = mMood * mouthHeight;
         }
         mOval.set(w / 5, mouthHeight * 3 + mouthTop, w / 5 * 4, mouthHeight * 4 - mouthTop);
+        if (mMouthOpen) {
+            mPaintMouth.setStyle(Style.FILL_AND_STROKE);
+        } else {
+            mPaintMouth.setStyle(Style.STROKE);
+        }
 
-        canvas.drawArc(mOval, startAngle, 180, false, mPaintStroke);
+        canvas.drawArc(mOval, startAngle, 180, false, mPaintMouth);
     }
 
     public void setMood(final float mood) {
         float difference = Math.abs(mMood - mood);
-        float change = .04f;
+        float change = .06f;
         if (difference <= change) {
             mMood = mood;
         } else {
@@ -130,8 +132,25 @@ public class FaceView extends View {
         return mMood;
     }
 
+    public void setMouthOpen(boolean mouthOpen) {
+        mMouthOpen = mouthOpen;
+        invalidate();
+    }
+
+    public boolean isMouthOpen() {
+        return mMouthOpen;
+    }
+
     public void blink() {
         mBlink = true;
         invalidate();
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mBlink = false;
+                invalidate();
+            }
+        }, 100);
     }
 }
