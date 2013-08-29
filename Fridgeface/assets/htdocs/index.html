@@ -38,10 +38,10 @@
 
     <div style="clear:both;" />
 
-    <!--form action="/poke.json" method="post" autocomplete="off" onsubmit="return Ajax.submit(this, function(resp){document.getElementById('phrase').value='';}, function(resp){alert(resp.message);}, function(){alert('There was a problem connecting to the server.')});">
+    <form action="/poke.json" method="post" autocomplete="off" onsubmit="return Ajax.submit(this, function(resp){document.getElementById('phrase').value='';}, function(resp){alert(resp.message);}, function(){alert('There was a problem connecting to the server.')});" style="float:left; margin-top:10px;">
         <input type="hidden" name="verb" value="speak" />
-        <label>Phrase: <input type="text" name="phrase" id="phrase" /></label>
+        <label>Phrase: <input type="text" name="phrase" id="phrase" style="width:300px;" /></label>
         <input type="submit" value="Make Me Talk" />
-    </form-->
+    </form>
 </body>
 </html>

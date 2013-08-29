@@ -17,8 +17,10 @@ import android.view.View;
 public class FaceView extends View {
     private Handler mHandler;
     private Runnable mMoodRunnable;
+    private Runnable mSpeakingRunnable;
 
     private float mMood = 0f;
+    private boolean mSpeaking = false;
     private boolean mMouthOpen = false;
     private boolean mBlink = false;
 
@@ -47,10 +49,23 @@ public class FaceView extends View {
             @Override
             public void run() {
                 blink();
-                setMouthOpen(!mMouthOpen);
                 mHandler.postDelayed(this, new Random().nextInt(2000) + 5000);
             }
         }, 5000);
+
+        mSpeakingRunnable = new Runnable() {
+            @Override
+            public void run() {
+                mMouthOpen = (!mMouthOpen) && mSpeaking;
+                invalidate();
+
+                if (mSpeaking) {
+                    mHandler.postDelayed(this, 80 + new Random().nextInt(150));
+                } else {
+                    mHandler.removeCallbacks(this);
+                }
+            }
+        };
 
         mPaintEyes = new Paint();
         mPaintEyes.setColor(Color.BLACK);
@@ -132,13 +147,14 @@ public class FaceView extends View {
         return mMood;
     }
 
-    public void setMouthOpen(boolean mouthOpen) {
-        mMouthOpen = mouthOpen;
-        invalidate();
+    public void setSpeaking(boolean speaking) {
+        mSpeaking = speaking;
+        mHandler.removeCallbacks(mSpeakingRunnable);
+        mHandler.post(mSpeakingRunnable);
     }
 
-    public boolean isMouthOpen() {
-        return mMouthOpen;
+    public boolean isSpeaking() {
+        return mSpeaking;
     }
 
     public void blink() {

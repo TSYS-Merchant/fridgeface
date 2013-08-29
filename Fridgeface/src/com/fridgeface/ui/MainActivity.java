@@ -129,6 +129,9 @@ public class MainActivity extends Activity {
                 if (intent.hasExtra(IntentExtras.EXTRA_MOOD)) {
                     float mood = intent.getFloatExtra(IntentExtras.EXTRA_MOOD, 0);
                     mFaceView.setMood(Math.min(1f, Math.max(-1f, mood)));
+                } else if (intent.hasExtra(IntentExtras.EXTRA_PHRASE)) {
+                    String phrase = intent.getStringExtra(IntentExtras.EXTRA_PHRASE);
+                    mSpeechHelper.say(phrase);
                 }
             }
         };
@@ -181,6 +184,7 @@ public class MainActivity extends Activity {
                 return true;
 
             default:
+                LogHelper.i("Keycode: " + event.getKeyCode());
                 return super.onKeyDown(keyCode, event);
         }
     }
@@ -250,19 +254,19 @@ public class MainActivity extends Activity {
             @Override
             public void onStart(String utteranceId) {
                 LogHelper.print("Utterance onStart");
-                // START speech animation
+                mFaceView.setSpeaking(true);
             }
 
             @Override
             public void onError(String utteranceId) {
                 LogHelper.print("Utterance onError");
-                // STOP speech animation
+                mFaceView.setSpeaking(false);
             }
 
             @Override
             public void onDone(String utteranceId) {
                 LogHelper.print("Utterance onDone");
-                // STOP speech animation
+                mFaceView.setSpeaking(false);
             }
         });
     }

@@ -106,7 +106,9 @@ public class ServerRequestHandler extends HttpServerThread {
                         if (postVars.containsKey("phrase") && !postVars.get("phrase").equals("")) {
                             String phrase = postVars.get("phrase");
                             LogHelper.i("Speaking text: " + phrase);
-                            // TODO: Text-to-speech
+                            Intent intent = new Intent(IntentExtras.ACTION_POKE);
+                            intent.putExtra(IntentExtras.EXTRA_PHRASE, phrase);
+                            mService.sendBroadcast(intent);
                             json.put("success", true);
                         } else {
                             json.put("message", "Please specify a phrase.");

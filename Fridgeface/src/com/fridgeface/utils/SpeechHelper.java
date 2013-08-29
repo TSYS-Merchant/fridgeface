@@ -13,7 +13,7 @@ import com.fridgeface.R;
 public class SpeechHelper implements TextToSpeech.OnInitListener {
     private Context mContext;
     private TextToSpeech mTts;
-    private HashMap<String, String> speechParams;
+    private HashMap<String, String> mSpeechParams;
 
     public enum Language {
         US_ENGLISH(Locale.US),
@@ -66,15 +66,12 @@ public class SpeechHelper implements TextToSpeech.OnInitListener {
         mContext = context;
         mTts = new TextToSpeech(context, this);
         mTts.setOnUtteranceProgressListener(listener);
-
-        speechParams = new HashMap<String, String>();
-        speechParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "fridgeface");
     }
 
     @Override
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
-            int result = mTts.setLanguage(Locale.US);
+            int result = mTts.setLanguage(Locale.UK);
             if (result == TextToSpeech.LANG_MISSING_DATA
                     || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 LogHelper.print("This Language is not supported");
@@ -99,6 +96,8 @@ public class SpeechHelper implements TextToSpeech.OnInitListener {
     }
 
     public void say(String text) {
+        HashMap<String, String> speechParams = new HashMap<String, String>();
+        speechParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
         mTts.speak(text, TextToSpeech.QUEUE_FLUSH, speechParams);
     }
 
