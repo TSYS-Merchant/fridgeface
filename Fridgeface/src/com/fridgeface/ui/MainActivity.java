@@ -10,12 +10,16 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.fridgeface.R;
 import com.fridgeface.constants.IntentExtras;
+import com.fridgeface.utils.LogHelper;
+import com.fridgeface.utils.SpeechHelper;
 import com.fridgeface.utils.SystemUiHider;
 import com.fridgeface.views.FaceView;
 import com.fridgeface.webserver.ServerRequestHandler;
@@ -32,12 +36,15 @@ public class MainActivity extends Activity {
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     private static final boolean TOGGLE_ON_CLICK = true;
     private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
+    private static final int RESULT_TTS_CHECK = 1;
 
     private Intent mServerIntent;
     private SystemUiHider mSystemUiHider;
 
     private FaceView mFaceView;
     private BroadcastReceiver mReceiver;
+
+    private SpeechHelper mSpeechHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +132,9 @@ public class MainActivity extends Activity {
                 }
             }
         };
+
+        // setup TTS
+        checkTts();
     }
 
     @Override
@@ -151,6 +161,12 @@ public class MainActivity extends Activity {
         startService(mServerIntent.putExtra(SocketListenerService.EXTRA_COMMAND,
                 SocketListenerService.COMMAND_STOP_SERVER));
         unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public void onDestroy() {
+        mSpeechHelper.shutDown();
+        super.onDestroy();
     }
 
     @Override
@@ -197,5 +213,57 @@ public class MainActivity extends Activity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    /**
+     * Launch intent to query TTS engine for voice availability
+     */
+    private void checkTts() {
+        Intent intent = new Intent();
+        intent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        startActivityForResult(intent, RESULT_TTS_CHECK);
+    }
+
+    /**
+     * Receive result from TTS engine query and init engine if voices installed, otherwise launch play
+     * store to download
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RESULT_TTS_CHECK) {
+            if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+                initTts();
+            } else {
+                Intent intent = new Intent();
+                intent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                startActivity(intent);
+                finish();
+            }
+        }
+    }
+
+    /**
+     * Init TTS engine and setup utterance callback
+     */
+    private void initTts() {
+        mSpeechHelper = new SpeechHelper(this, new UtteranceProgressListener() {
+            @Override
+            public void onStart(String utteranceId) {
+                LogHelper.print("Utterance onStart");
+                // START speech animation
+            }
+
+            @Override
+            public void onError(String utteranceId) {
+                LogHelper.print("Utterance onError");
+                // STOP speech animation
+            }
+
+            @Override
+            public void onDone(String utteranceId) {
+                LogHelper.print("Utterance onDone");
+                // STOP speech animation
+            }
+        });
     }
 }

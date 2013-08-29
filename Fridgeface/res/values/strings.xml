@@ -4,5 +4,6 @@
     <string name="app_name">Fridgeface</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="face_goes_here">FACE GOES HERE</string>
+    <string name="tts_startup">Fridge Face Ready</string>
 
 </resources>
