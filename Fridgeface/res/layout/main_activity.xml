@@ -35,16 +35,34 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:background="@color/black_overlay"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             tools:ignore="UselessParent" >
+
+            <TextView
+                android:id="@+id/ip_addr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:textColor="#ffffff"
+                android:textSize="24sp" />
 
             <Button
                 android:id="@+id/dummy_button"
                 style="?buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="@string/dummy_button" />
+
+            <TextView
+                android:id="@+id/last_phrase"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="@string/dummy_button" />
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
         </LinearLayout>
     </FrameLayout>
 

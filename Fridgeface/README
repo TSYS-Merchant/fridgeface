@@ -1,0 +1,21 @@
+ADB over network:
+
+- Recent versions of Android added whitelist support for ADB connections, but triggering the
+  "allow this computer" dialog still requires a USB connection. So, everybody who wants to push
+  stuff to the Q has to connect via USB first.
+
+- The "ADB over network" option gets reset when the Q is rebooted, and will have to be re-enabled
+  manually.
+
+- Connect to the Q with adb connect XXX.XXX.XXX.XXX (Use 'disconnect' in the same fashion when
+  needed) Port 5555 is the default, which the Q is already setup to use. If successful, you'll see
+  the Q as a connected device via adb devices
+
+One interesting problem I've run into is the inability to cleanly shut down the Q, as it has no
+power button, and all the normal adb 'shutdown' commands don't perform the proper cleanup. The best
+thing I've found so far is:
+
+  adb shell input keyevent 26
+
+Until something easier turns up we should try to use this whenever shutdown is needed, or the
+filesystem is going to eventually suffer. (Maybe add a real shutdown option to Fridgeface)

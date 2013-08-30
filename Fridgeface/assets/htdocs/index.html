@@ -40,8 +40,44 @@
 
     <form action="/poke.json" method="post" autocomplete="off" onsubmit="return Ajax.submit(this, function(resp){document.getElementById('phrase').value='';}, function(resp){alert(resp.message);}, function(){alert('There was a problem connecting to the server.')});" style="float:left; margin-top:10px;">
         <input type="hidden" name="verb" value="speak" />
-        <label>Phrase: <input type="text" name="phrase" id="phrase" style="width:300px;" /></label>
-        <input type="submit" value="Make Me Talk" />
+        <label>Phrase: <input type="text" name="phrase" id="phrase" maxlength="140" placeholder="Max 140 chars" style="width:300px;" /></label>
+        <input type="submit" value="SPEAK" />
+        <input type="button" value="SHUTUP" />
+        
+        <div style="clear:both;" />
+        
+        <label>Voice: <select name="voice">
+            <option value="us_english" selected>US English (Female)</option>
+            <option value="uk_english">UK English (Male)</option>
+            <option value="french">French (Female)</option>
+            <option value="german">German (Female)</option>
+            <option value="italian">Italian (Female)</option>
+            <option value="spanish">Spanish (Female)</option>
+        </select></label>
+        
+        <div style="clear:both;" />
+        
+        <label>Pitch: <select name="pitch">
+            <option value="highest">Highest</option>
+            <option value="higher">Higher</option>
+            <option value="high">High</option>
+            <option value="normal" selected>Normal</option>
+            <option value="low">Low</option>
+            <option value="lower">Lower</option>
+            <option value="lowest">Lowest</option>
+        </select></label>
+        
+        <div style="clear:both;" />
+        
+        <label>Rate: <select name="rate">
+            <option value="fastest">Fastest</option>
+            <option value="faster">Faster</option>
+            <option value="fast">Fast</option>
+            <option value="normal" selected>Normal</option>
+            <option value="slow">Slow</option>
+            <option value="slower">Slower</option>
+            <option value="slowest">Slowest</option>
+        </select></label>
     </form>
 </body>
 </html>

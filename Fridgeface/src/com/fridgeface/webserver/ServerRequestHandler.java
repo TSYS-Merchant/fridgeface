@@ -103,11 +103,19 @@ public class ServerRequestHandler extends HttpServerThread {
                             json.put("message", "Please specify a mood in the range of -1 to 1.");
                         }
                     } else if (postVars.get("verb").equals("speak")) {
-                        if (postVars.containsKey("phrase") && !postVars.get("phrase").equals("")) {
+                        if (postVars.containsKey("phrase")
+                                && !postVars.get("phrase").equals("")) {
                             String phrase = postVars.get("phrase");
-                            LogHelper.i("Speaking text: " + phrase);
+                            String voice = postVars.get("voice");
+                            String pitch = postVars.get("pitch");
+                            String rate = postVars.get("rate");
+                            LogHelper.i("Speaking text: " + phrase + " / " + voice + " / " + pitch
+                                    + " / " + rate);
                             Intent intent = new Intent(IntentExtras.ACTION_POKE);
-                            intent.putExtra(IntentExtras.EXTRA_PHRASE, phrase);
+                            intent.putExtra(IntentExtras.TTS_PHRASE, phrase);
+                            intent.putExtra(IntentExtras.TTS_VOICE, voice);
+                            intent.putExtra(IntentExtras.TTS_PITCH, pitch);
+                            intent.putExtra(IntentExtras.TTS_RATE, rate);
                             mService.sendBroadcast(intent);
                             json.put("success", true);
                         } else {
