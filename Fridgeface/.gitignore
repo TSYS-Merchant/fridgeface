@@ -1,0 +1,18 @@
+# Eclipse projects
+**/bin/
+**/gen/
+**/.settings/
+**/proguard/
+**/local.properties
+**/build.xml
+
+# Android Studio projects
+**/build/
+**/.gradle
+**/*.iml
+**/.idea
+
+# Misc
+!**.so
+.arclint
+**/creds.gradle
