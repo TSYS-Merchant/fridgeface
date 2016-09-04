@@ -5,11 +5,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.os.DropBoxManager;
 import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * The better way to log. This is a wrapper class for android.util.Log that contains additional methods
@@ -31,7 +31,7 @@ public class LogHelper {
 
     /**
      * Initializes LogHelper settings.
-     * 
+     *
      * @param isDebugBuild - set to true to enable log messages, false to disable log messages
      */
     public static void init(boolean isDebugBuild) {
@@ -40,7 +40,7 @@ public class LogHelper {
 
     /**
      * Initializes LogHelper settings.
-     * 
+     *
      * @param isDebugBuild - set to true to enable log messages, false to disable log messages
      * @param logTag - the tag to use for logging
      */
@@ -51,7 +51,7 @@ public class LogHelper {
     /**
      * Initializes LogHelper settings (dividers and line wrapping only occur when using the print
      * method).
-     * 
+     *
      * @param isDebugBuild - set to true to enable log messages, false to disable log messages
      * @param useDivider - set to true to show dividers, false to hide dividers
      * @param wrapLongLines - set to true to wrap lines that are longer than the maxLineWidth
@@ -69,7 +69,7 @@ public class LogHelper {
     /**
      * Initializes LogHelper settings (dividers and line wrapping only occur when using the print
      * method).
-     * 
+     *
      * @param isDebugBuild - set to true to enable log messages, false to disable log messages
      * @param useDivider - set to true to show dividers, false to hide dividers
      * @param wrapLongLines - set to true to wrap lines that are longer than the maxLineWidth
@@ -89,7 +89,7 @@ public class LogHelper {
     /**
      * Send a DEBUG log message. If the log tag was not set with the init method, the calling class and
      * line number are set as the tag.
-     * 
+     *
      * @param message - The message you would like logged
      */
     public static void d(String message) {
@@ -98,7 +98,7 @@ public class LogHelper {
 
     /**
      * Send a DEBUG log message.
-     * 
+     *
      * @param tag - Used to identify the source of a log message. It usually identifies the class or
      *            activity where the log call occurs
      * @param message - The message you would like logged
@@ -112,7 +112,7 @@ public class LogHelper {
     /**
      * Send a ERROR log message. If the log tag was not set with the init method, the calling class and
      * line number are set as the tag.
-     * 
+     *
      * @param message - The message you would like logged
      */
     public static void e(String message) {
@@ -121,7 +121,7 @@ public class LogHelper {
 
     /**
      * Send a ERROR log message.
-     * 
+     *
      * @param tag - Used to identify the source of a log message. It usually identifies the class or
      *            activity where the log call occurs
      * @param message - The message you would like logged
@@ -135,7 +135,7 @@ public class LogHelper {
     /**
      * Send an INFO log message. If the log tag was not set with the init method, the calling class and
      * line number are set as the tag.
-     * 
+     *
      * @param message - The message you would like logged
      */
     public static void i(String message) {
@@ -144,7 +144,7 @@ public class LogHelper {
 
     /**
      * Send an INFO log message.
-     * 
+     *
      * @param tag - Used to identify the source of a log message. It usually identifies the class or
      *            activity where the log call occurs
      * @param message - The message you would like logged
@@ -158,7 +158,7 @@ public class LogHelper {
     /**
      * Send a VERBOSE log message. If the log tag was not set with the init method, the calling class
      * and line number are set as the tag.
-     * 
+     *
      * @param message - The message you would like logged
      */
     public static void v(String message) {
@@ -167,7 +167,7 @@ public class LogHelper {
 
     /**
      * Send a VERBOSE log message.
-     * 
+     *
      * @param tag - Used to identify the source of a log message. It usually identifies the class or
      *            activity where the log call occurs
      * @param message - The message you would like logged
@@ -181,7 +181,7 @@ public class LogHelper {
     /**
      * Send a WARN log message. If the log tag was not set with the init method, the calling class and
      * line number are set as the tag.
-     * 
+     *
      * @param message - The message you would like logged
      */
     public static void w(String message) {
@@ -190,7 +190,7 @@ public class LogHelper {
 
     /**
      * Send a WARN log message.
-     * 
+     *
      * @param tag - Used to identify the source of a log message. It usually identifies the class or
      *            activity where the log call occurs
      * @param message - The message you would like logged
@@ -206,7 +206,7 @@ public class LogHelper {
      * with the init method, the calling class and line number are set as the tag. Depending on system
      * configuration, a report may be added to the {@link DropBoxManager} and/or the process may be
      * terminated immediately with an error dialog.
-     * 
+     *
      * @param message - The message you would like logged
      */
     public static void wtf(String message) {
@@ -217,7 +217,7 @@ public class LogHelper {
      * What a Terrible Failure: Report an exception that should never happen. Depending on system
      * configuration, a report may be added to the {@link DropBoxManager} and/or the process may be
      * terminated immediately with an error dialog.
-     * 
+     *
      * @param message - The message you would like logged
      */
     public static void wtf(String tag, String message) {
@@ -229,7 +229,7 @@ public class LogHelper {
     /**
      * Send a log message with dividers and line wrapping (if enabled). If the log tag was not set with
      * the init method, the calling class and line number are set as the tag.
-     * 
+     *
      * @param message - The message you would like logged
      */
     public static void print(CharSequence message) {
@@ -238,7 +238,7 @@ public class LogHelper {
 
     /**
      * Send a log message with dividers and line wrapping (if enabled).
-     * 
+     *
      * @param message - The message you would like logged
      */
     public static void print(String tag, CharSequence message) {
@@ -272,7 +272,7 @@ public class LogHelper {
     /**
      * Send a DEBUG log message to view a JSONObject. If the log tag was not set with the init method,
      * the calling class and line number are set as the tag.
-     * 
+     *
      * @param tag - Used to identify the source of a log message. It usually identifies the class or
      *            activity where the log call occurs
      * @param jsonObject - The JSONObject you would like logged
@@ -283,7 +283,7 @@ public class LogHelper {
 
     /**
      * Send a DEBUG log message to view a JSONObject.
-     * 
+     *
      * @param tag - Used to identify the source of a log message. It usually identifies the class or
      *            activity where the log call occurs
      * @param jsonObject - The JSONObject you would like logged
@@ -311,7 +311,7 @@ public class LogHelper {
     /**
      * Send a WARN log message to view an Exception. If the log tag was not set with the init method,
      * the calling class and line number are set as the tag.
-     * 
+     *
      * @param e - The Exception you would like logged
      */
     public static void print(Exception e) {
@@ -320,7 +320,7 @@ public class LogHelper {
 
     /**
      * Send a WARN log message to view an Exception.
-     * 
+     *
      * @param tag - Used to identify the source of a log message. It usually identifies the class or
      *            activity where the log call occurs
      * @param e - The Exception you would like logged
