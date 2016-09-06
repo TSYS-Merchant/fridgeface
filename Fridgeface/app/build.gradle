@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 18
+    compileSdkVersion 24
     buildToolsVersion "24.0.2"
 
     defaultConfig {
         applicationId "com.fridgeface"
         minSdkVersion 15
-        targetSdkVersion 18
+        targetSdkVersion 24
     }
 
     buildTypes {
@@ -19,5 +19,7 @@ android {
 }
 
 dependencies {
-    compile files('libs/webserver.jar')
+//    compile files('libs/webserver.jar')
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile group: 'cz.msebera.android', name: 'httpclient', version: '4.4.1.1'
 }

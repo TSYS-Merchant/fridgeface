@@ -6,18 +6,24 @@ import java.util.Locale;
 
 import android.content.Context;
 import android.media.AudioManager;
+import android.os.Build;
+import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 
 import com.fridgeface.R;
+
+import static android.os.Build.VERSION_CODES.LOLLIPOP;
 
 public class SpeechHelper implements TextToSpeech.OnInitListener {
     private static final int MAX_TTS_CHARS = 140;
 
     private Context mContext;
     private TextToSpeech mTts;
-    private HashMap<String, String> mSpeechParams;
-    private HashMap<String, String> mSpeechPaddingParams;
+    private HashMap<String, String> mSpeechParamsPreLollipop;
+    private HashMap<String, String> mSpeechPaddingParamsPreLollipop;
+    private Bundle mSpeechParams;
+    private Bundle mSpeechPaddingParams;
 
     public enum Language {
         US_ENGLISH(Locale.US),
@@ -29,7 +35,7 @@ public class SpeechHelper implements TextToSpeech.OnInitListener {
 
         public Locale key;
 
-        private Language(Locale key) {
+        Language(Locale key) {
             this.key = key;
         }
     }
@@ -45,7 +51,7 @@ public class SpeechHelper implements TextToSpeech.OnInitListener {
 
         public float key;
 
-        private Pitch(float key) {
+        Pitch(float key) {
             this.key = key;
         }
     }
@@ -61,7 +67,7 @@ public class SpeechHelper implements TextToSpeech.OnInitListener {
 
         public float key;
 
-        private Rate(float key) {
+        Rate(float key) {
             this.key = key;
         }
     }
@@ -71,15 +77,27 @@ public class SpeechHelper implements TextToSpeech.OnInitListener {
         mTts = new TextToSpeech(context, this);
         mTts.setOnUtteranceProgressListener(listener);
 
-        mSpeechParams = new HashMap<String, String>();
-        mSpeechParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "fridgeface");
-        mSpeechParams.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+        if (Build.VERSION.SDK_INT >= LOLLIPOP) {
+            mSpeechParams = new Bundle();
+            mSpeechParams.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "fridgeface");
+            mSpeechParams.putString(TextToSpeech.Engine.KEY_PARAM_STREAM,
                 String.valueOf(AudioManager.STREAM_MUSIC));
 
-        mSpeechPaddingParams = new HashMap<String, String>();
-        mSpeechPaddingParams.put(TextToSpeech.Engine.KEY_PARAM_VOLUME, "0");
-        mSpeechPaddingParams.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+            mSpeechPaddingParams = new Bundle();
+            mSpeechPaddingParams.putString(TextToSpeech.Engine.KEY_PARAM_VOLUME, "0");
+            mSpeechPaddingParams.putString(TextToSpeech.Engine.KEY_PARAM_STREAM,
                 String.valueOf(AudioManager.STREAM_MUSIC));
+        } else {
+            mSpeechParamsPreLollipop = new HashMap<>();
+            mSpeechParamsPreLollipop.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "fridgeface");
+            mSpeechParamsPreLollipop.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+                    String.valueOf(AudioManager.STREAM_MUSIC));
+
+            mSpeechPaddingParamsPreLollipop = new HashMap<>();
+            mSpeechPaddingParamsPreLollipop.put(TextToSpeech.Engine.KEY_PARAM_VOLUME, "0");
+            mSpeechPaddingParamsPreLollipop.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+                    String.valueOf(AudioManager.STREAM_MUSIC));
+        }
     }
 
     @Override
@@ -113,8 +131,13 @@ public class SpeechHelper implements TextToSpeech.OnInitListener {
         if (text.length() > MAX_TTS_CHARS) {
             text = text.substring(0, MAX_TTS_CHARS);
         }
-        mTts.speak("blah blah blah blah", TextToSpeech.QUEUE_FLUSH, mSpeechPaddingParams);
-        mTts.speak(text, TextToSpeech.QUEUE_ADD, mSpeechParams);
+        if (Build.VERSION.SDK_INT >= LOLLIPOP) {
+            //mTts.speak("blah blah blah blah", TextToSpeech.QUEUE_FLUSH, mSpeechPaddingParams, null);
+            mTts.speak(text, TextToSpeech.QUEUE_ADD, mSpeechParams, null);
+        } else {
+            //mTts.speak("blah blah blah blah", TextToSpeech.QUEUE_FLUSH, mSpeechPaddingParamsPreLollipop);
+            mTts.speak(text, TextToSpeech.QUEUE_ADD, mSpeechParamsPreLollipop);
+        }
     }
 
     public void shutup() {

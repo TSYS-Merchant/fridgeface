@@ -1,8 +1,6 @@
 
 package com.fridgeface.ui;
 
-import android.app.Activity;
-import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +12,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,13 +36,13 @@ import com.fridgeface.webserver.SocketListenerService;
 /**
  * An example full-screen activity that shows and hides the system UI (i.e. status bar and
  * navigation/system bar) with user interaction.
- * 
+ *
  * @see SystemUiHider
  */
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     private static final boolean AUTO_HIDE = true;
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-    private static final boolean TOGGLE_ON_CLICK = true;
+    private static final boolean TOGGLE_ON_CLICK = false;
     private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
     private static final int WEBSERVER_PORT = 1234;
     private static final int RESULT_TTS_CHECK = 1;
@@ -70,14 +70,14 @@ public class MainActivity extends Activity {
 
         mIpAddr.setText(NetHelper.getIPAddress(true) + ":" + WEBSERVER_PORT);
 
+
         mServerIntent = new Intent(this, SocketListenerService.class)
                 .putExtra(SocketListenerService.EXTRA_REQUEST_HANDLER, ServerRequestHandler.class)
                 .putExtra(SocketListenerService.EXTRA_PORT, WEBSERVER_PORT)
                 .putExtra(SocketListenerService.EXTRA_NOTIFICATION,
-                        new Notification.Builder(this)
+                        new NotificationCompat.Builder(this)
                                 .setContentTitle("Webserver running")
-                                .setSmallIcon(R.drawable.ic_launcher)
-                                .getNotification()
+                                .setSmallIcon(R.drawable.ic_launcher).build()
                 );
 
         final View controlsView = findViewById(R.id.fullscreen_content_controls);
@@ -272,7 +272,7 @@ public class MainActivity extends Activity {
                 if (intent.getBooleanExtra(WifiManager.EXTRA_SUPPLICANT_CONNECTED, false)) {
                     mIpAddr.setText(NetHelper.getIPAddress(true) + ":" + WEBSERVER_PORT);
                 } else {
-                    mIpAddr.setText("No connection");
+                    mIpAddr.setText(R.string.error_no_connection);
                 }
             }
         }

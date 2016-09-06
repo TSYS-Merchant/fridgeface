@@ -11,10 +11,16 @@ import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.os.Handler;
 import android.os.Looper;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
+import com.fridgeface.utils.LogHelper;
+import com.fridgeface.utils.SpeechHelper;
+
 public class FaceView extends View {
+    private static final String TAG = FaceView.class.getName();
     private Handler mHandler;
     private Runnable mMoodRunnable;
     private Runnable mSpeakingRunnable;
@@ -23,10 +29,20 @@ public class FaceView extends View {
     private boolean mSpeaking = false;
     private boolean mMouthOpen = false;
     private boolean mBlink = false;
+    private boolean mLeftEyePoked = false;
+    private boolean mRightEyePoked = false;
+
+    private float mLeftEyeCenterX;
+    private float mLeftEyeCenterY;
+    private float mRightEyeCenterX;
+    private float mRightEyeCenterY;
+    private float mEyeRadius;
 
     private Paint mPaintEyes;
     private Paint mPaintMouth;
     private RectF mOval;
+
+    private SpeechHelper mSpeechHelper;
 
     public FaceView(Context context) {
         super(context);
@@ -44,6 +60,22 @@ public class FaceView extends View {
     }
 
     private void init() {
+        mSpeechHelper = new SpeechHelper(getContext(), new UtteranceProgressListener() {
+            @Override
+            public void onStart(String utteranceId) {
+                setSpeaking(true);
+            }
+
+            @Override
+            public void onDone(String utteranceId) {
+                setSpeaking(false);
+            }
+
+            @Override
+            public void onError(String utteranceId) {
+                setSpeaking(false);
+            }
+        });
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -82,6 +114,43 @@ public class FaceView extends View {
     }
 
     @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            float touchX = event.getRawX();
+            float touchY = event.getRawY();
+            if (touchY >= (mLeftEyeCenterY - mEyeRadius) && touchY <= (mLeftEyeCenterY + mEyeRadius)) {
+                if (touchX >= (mLeftEyeCenterX - mEyeRadius) && touchX <= (mLeftEyeCenterX + mEyeRadius)) {
+                    LogHelper.d(TAG, "You poked Fridgeface in the left eye. How rude!");
+                    mLeftEyePoked = true;
+                    setMood(-1f);
+                    mSpeechHelper.say("Ouch");
+                }
+            }
+
+            if (touchY >= (mRightEyeCenterY - mEyeRadius) && touchY <= (mRightEyeCenterY + mEyeRadius)) {
+                if (touchX >= (mRightEyeCenterX - mEyeRadius) && touchX <= (mRightEyeCenterX + mEyeRadius)) {
+                    LogHelper.d(TAG, "You poked Fridgeface in the right eye. How rude!");
+                    mRightEyePoked = true;
+                    setMood(-1f);
+                    mSpeechHelper.say("Ouch");
+                }
+            }
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (mLeftEyePoked) {
+                mLeftEyePoked = false;
+                setMood(0f);
+            }
+
+            if (mRightEyePoked) {
+                mRightEyePoked = false;
+                setMood(0f);
+            }
+        }
+        invalidate();
+        return super.onTouchEvent(event);
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
@@ -90,13 +159,21 @@ public class FaceView extends View {
         int smallestDim = Math.min(w, h);
 
         if (!mBlink) {
-            canvas.drawCircle(w / 4, h / 4, smallestDim / 6, mPaintEyes);
-            canvas.drawCircle(w / 4 * 3, h / 4, smallestDim / 6, mPaintEyes);
+            mEyeRadius = smallestDim / 6;
+            if (mLeftEyePoked) {
+                drawLeftEyeClosed(canvas, h, w, smallestDim);
         } else {
-            canvas.drawLine(w / 4 - smallestDim / 6, h / 4, w / 4 + smallestDim / 6, h / 4,
-                    mPaintEyes);
-            canvas.drawLine(w / 4 * 3 - smallestDim / 6, h / 4, w / 4 * 3 + smallestDim / 6, h / 4,
-                    mPaintEyes);
+                drawLeftEyeOpen(canvas, h, w);
+            }
+
+            if (mRightEyePoked) {
+                drawRightEyeClosed(canvas, h, w, smallestDim);
+            } else {
+                drawRightEyeOpen(canvas, h, w);
+            }
+        } else {
+            drawLeftEyeClosed(canvas, h, w, smallestDim);
+            drawRightEyeClosed(canvas, h, w, smallestDim);
         }
 
         float mouthHeight = h / 5;
@@ -116,6 +193,36 @@ public class FaceView extends View {
         }
 
         canvas.drawArc(mOval, startAngle, 180, false, mPaintMouth);
+    }
+
+    private void drawLeftEyeClosed(Canvas canvas, int h, int w, int smallestDim) {
+        float leftEyeClosedCenterX = w / 4 - smallestDim / 6;
+        float leftEyeClosedCenterY = h / 4;
+        float leftEyeClosedStopX = w / 4 + smallestDim / 6;
+        float leftEyeClosedStopY = h / 4;
+        canvas.drawLine(leftEyeClosedCenterX, leftEyeClosedCenterY, leftEyeClosedStopX, leftEyeClosedStopY,
+                mPaintEyes);
+    }
+
+    private void drawRightEyeClosed(Canvas canvas, int h, int w, int smallestDim) {
+        float rightEyeClosedCenterX = w / 4 * 3 - smallestDim / 6;
+        float rightEyeClosedCenterY = h / 4;
+        float rightEyeClosedStopX = w / 4 * 3 + smallestDim / 6;
+        float rightEyeClosedStopY = h / 4;
+        canvas.drawLine(rightEyeClosedCenterX, rightEyeClosedCenterY, rightEyeClosedStopX, rightEyeClosedStopY,
+                mPaintEyes);
+    }
+
+    private void drawRightEyeOpen(Canvas canvas, int h, int w) {
+        mRightEyeCenterX = w / 4 * 3;
+        mRightEyeCenterY = h / 4;
+        canvas.drawCircle(mRightEyeCenterX, mRightEyeCenterY, mEyeRadius, mPaintEyes);
+    }
+
+    private void drawLeftEyeOpen(Canvas canvas, int h, int w) {
+        mLeftEyeCenterX = w / 4;
+        mLeftEyeCenterY = h / 4;
+        canvas.drawCircle(mLeftEyeCenterX, mLeftEyeCenterY, mEyeRadius, mPaintEyes);
     }
 
     public void setMood(final float mood) {
