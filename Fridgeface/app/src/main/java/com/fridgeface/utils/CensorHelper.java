@@ -8,7 +8,7 @@ public class CensorHelper {
     private HashMap<String, String> mReplacementMap;
 
     public CensorHelper() {
-        mReplacementMap = new HashMap<String, String>();
+        mReplacementMap = new HashMap<>();
 
         // Doin' it Moronie style
         mReplacementMap.put("shit", "shtie");

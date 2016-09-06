@@ -15,6 +15,7 @@ import org.json.JSONObject;
  * The better way to log. This is a wrapper class for android.util.Log that contains additional methods
  * for improved logging. Use the init method to initialize the LogHelper settings.
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class LogHelper {
     private static boolean sIsDebugBuild = true;
     private static boolean sUseDivider = false;
@@ -105,7 +106,7 @@ public class LogHelper {
      */
     public static void d(String tag, String message) {
         if (sIsDebugBuild) {
-            Log.d(tag, message.toString());
+            Log.d(tag, message);
         }
     }
 
@@ -128,7 +129,7 @@ public class LogHelper {
      */
     public static void e(String tag, String message) {
         if (sIsDebugBuild) {
-            Log.e(tag, message.toString());
+            Log.e(tag, message);
         }
     }
 
@@ -151,7 +152,7 @@ public class LogHelper {
      */
     public static void i(String tag, String message) {
         if (sIsDebugBuild) {
-            Log.i(tag, message.toString());
+            Log.i(tag, message);
         }
     }
 
@@ -174,7 +175,7 @@ public class LogHelper {
      */
     public static void v(String tag, String message) {
         if (sIsDebugBuild) {
-            Log.v(tag, message.toString());
+            Log.v(tag, message);
         }
     }
 
@@ -197,7 +198,7 @@ public class LogHelper {
      */
     public static void w(String tag, String message) {
         if (sIsDebugBuild) {
-            Log.w(tag, message.toString());
+            Log.w(tag, message);
         }
     }
 
@@ -222,7 +223,7 @@ public class LogHelper {
      */
     public static void wtf(String tag, String message) {
         if (sIsDebugBuild) {
-            Log.wtf(tag, message.toString());
+            Log.wtf(tag, message);
         }
     }
 
@@ -250,6 +251,7 @@ public class LogHelper {
             if (sWrapLongLines) {
                 // split up longer messages to make viewable in logcat
                 if (message.length() > sMaxLineWidth) {
+                    //noinspection RedundantStringConstructorCall: creating a copy of the original to prevent modification
                     String newMessage = new String(message.toString());
                     int index = 0;
                     while (index + sMaxLineWidth <= newMessage.length()) {
@@ -273,8 +275,6 @@ public class LogHelper {
      * Send a DEBUG log message to view a JSONObject. If the log tag was not set with the init method,
      * the calling class and line number are set as the tag.
      *
-     * @param tag - Used to identify the source of a log message. It usually identifies the class or
-     *            activity where the log call occurs
      * @param jsonObject - The JSONObject you would like logged
      */
     public static void print(JSONObject jsonObject) {
@@ -379,7 +379,7 @@ public class LogHelper {
     }
 
     private static String getDefaultTag() {
-        if (sLogTag == "") {
+        if (sLogTag.equals("")) {
             return "[" + getCallingClassName() + ":" + getCallingLineNumber() + "]";
         } else {
             return sLogTag;

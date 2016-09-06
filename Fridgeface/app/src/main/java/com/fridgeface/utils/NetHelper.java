@@ -1,19 +1,19 @@
 
 package com.fridgeface.utils;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.http.conn.util.InetAddressUtils;
 
 public class NetHelper {
     /**
      * Get IP address from first non-localhost interface
-     * 
-     * @param ipv4 true=return ipv4, false=return ipv6
+     *
+     * @param useIPv4 true=return ipv4, false=return ipv6
      * @return address or empty string
      */
     public static String getIPAddress(boolean useIPv4) {
@@ -25,7 +25,7 @@ public class NetHelper {
                 for (InetAddress addr : addrs) {
                     if (!addr.isLoopbackAddress()) {
                         String sAddr = addr.getHostAddress().toUpperCase(Locale.US);
-                        boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
+                        boolean isIPv4 = addr instanceof Inet4Address;
                         if (useIPv4) {
                             if (isIPv4) {
                                 return sAddr;

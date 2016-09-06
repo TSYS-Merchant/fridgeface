@@ -17,15 +17,16 @@ import android.util.Log;
 import com.fridgeface.constants.IntentExtras;
 import com.fridgeface.utils.LogHelper;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpVersion;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHttpEntityEnclosingRequest;
-import org.apache.http.message.BasicHttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.HttpException;
+import cz.msebera.android.httpclient.HttpRequest;
+import cz.msebera.android.httpclient.HttpVersion;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.message.BasicHttpEntityEnclosingRequest;
+import cz.msebera.android.httpclient.message.BasicHttpResponse;
 
 public class ServerRequestHandler extends HttpServerThread {
     public static final String TAG = ServerRequestHandler.class.getName();
@@ -47,7 +48,7 @@ public class ServerRequestHandler extends HttpServerThread {
                 e.printStackTrace();
             }
 
-            HashMap<String, String> postVars = new HashMap<String, String>();
+            HashMap<String, String> postVars = new HashMap<>();
             try {
                 BasicHttpEntityEnclosingRequest entityRequest =
                         new BasicHttpEntityEnclosingRequest(request.getRequestLine());
